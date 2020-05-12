@@ -47,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
                 android:indeterminate="false"
-                android:max="10"
                 android:minHeight="50dp"
                 android:progress="0"
                 android:progressTint="@color/colorPrimary" />
@@ -112,6 +111,7 @@
             android:id="@+id/bottomBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Submit"
             android:textSize="18sp"
             android:textStyle="bold" />
