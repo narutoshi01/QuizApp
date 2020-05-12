@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         btnStart.setOnClickListener {
             txtInputLayoutName.error = null
-            if(editTextName.text.toString().isEmpty()) {
+            if (editTextName.text.toString().isEmpty()) {
                 txtInputLayoutName.error = "Please enter your name"
             } else {
                 val intent = Intent(this, QuestionActivity::class.java)
