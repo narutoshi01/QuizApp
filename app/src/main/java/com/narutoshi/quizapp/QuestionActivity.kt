@@ -1,12 +1,12 @@
 package com.narutoshi.quizapp
 
-import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_question.*
 
@@ -28,14 +28,22 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener {
         txtViewOption2.setOnClickListener(this)
         txtViewOption3.setOnClickListener(this)
         txtViewOption4.setOnClickListener(this)
+        bottomBtn.setOnClickListener(this)
 
     }
 
     private fun setQuestion() {
-        currentQuestionId = 1
+//        currentQuestionId = 1
+        selectedOption = 0
         val currentQuestion = questionsList!![currentQuestionId - 1]
 
         setOptionsToDefault()
+
+        if(currentQuestionId == questionsList!!.size) {
+            bottomBtn.setText(R.string.finish)
+        } else {
+            bottomBtn.setText(R.string.submit)
+        }
 
         txtViewQuestionText.text = currentQuestion.question
         imgViewFlag.setBackgroundResource(currentQuestion.image)
@@ -56,23 +64,69 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener {
         options.add(3, txtViewOption4)
 
         for (item in options) {
-//          item.background = resources.getDrawable(R.drawable.option_text_back)
-            item.background = ContextCompat.getDrawable(this, R.drawable.option_text_back)
+//          item.background = resources.getDrawable(R.drawable.default_option_text_back)
+            item.background = ContextCompat.getDrawable(this, R.drawable.default_option_text_back)
             item.typeface = Typeface.DEFAULT // BOLDなどもある
 //          item.setTextColor(Color.parseColor("#ffffff")) こんな感じでテキストカラーも設定できたりする
         }
     }
 
     override fun onClick(v: View?) {
-        val selectedOption = v as TextView
-        val selectedOptionNum= when(v.id) {
-            R.id.txtViewOption1 -> 1
-            R.id.txtViewOption2 -> 2
-            R.id.txtViewOption3 -> 3
-            R.id.txtViewOption4 -> 4
-            else -> 0
+        when(v?.id) {
+            R.id.txtViewOption1 -> setSelectedOptionView(txtViewOption1, 1)
+            R.id.txtViewOption2 -> setSelectedOptionView(txtViewOption2, 2)
+            R.id.txtViewOption3 -> setSelectedOptionView(txtViewOption3, 3)
+            R.id.txtViewOption4 -> setSelectedOptionView(txtViewOption4, 4)
+            R.id.bottomBtn -> {
+                when(bottomBtn.text) {
+                    getString(R.string.submit) -> {
+                        if(selectedOption == 0) {
+                            // どの選択肢も選択せずに，次の問題にいく (or フィニッシュ)
+                            if(currentQuestionId < questionsList!!.size) {
+                                currentQuestionId++
+                                setQuestion()
+                            } else {
+                                // Todo 問題終了。結果表示画面へ
+                            }
+                        } else {
+                            val currentQuestion = questionsList!![currentQuestionId - 1]
+                            val correctAnswer = currentQuestion.correctAnswer
+                            setAnswerView(correctAnswer, R.drawable.correct_option_text_back)
+                            if(correctAnswer != selectedOption) {
+                                // 間違いのとき
+                                setAnswerView(selectedOption, R.drawable.wrong_option_text_back)
+                            }
+                            if(currentQuestionId == questionsList!!.size) {
+                                bottomBtn.setText(R.string.finish)
+                            } else {
+                                bottomBtn.setText(R.string.next_question)
+                            }
+                        }
+                    }
+
+                    getString(R.string.next_question) -> {
+                        currentQuestionId++
+                        setQuestion()
+                        bottomBtn.setText(R.string.submit)
+                    }
+
+                    getString(R.string.finish) -> {
+                        // Todo　結果表示がめんへ
+                        Toast.makeText(this, "Finish", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
         }
-        setSelectedOptionView(selectedOption, selectedOptionNum)
+    }
+
+    private fun setAnswerView(answer: Int, drawableResId: Int) {
+        when(answer) {
+            1 -> txtViewOption1.background = ContextCompat.getDrawable(this, drawableResId)
+            2 -> txtViewOption2.background = ContextCompat.getDrawable(this, drawableResId)
+            3 -> txtViewOption3.background = ContextCompat.getDrawable(this, drawableResId)
+            4 -> txtViewOption4.background = ContextCompat.getDrawable(this, drawableResId)
+        }
     }
 
     private fun setSelectedOptionView(selectedOption: TextView, selectedOptionNum: Int) {
