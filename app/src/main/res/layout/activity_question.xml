@@ -1,9 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".QuestionActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/txtViewQuestionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="What country does this flag belong to?" />
+
+        <ImageView
+            android:id="@+id/imgViewFlag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            tools:srcCompat="@drawable/ic_flag_of_argentina" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:indeterminate="false"
+                android:max="10"
+                android:minHeight="50dp"
+                android:progress="0"
+                android:progressTint="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/txtViewProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1/10"
+                android:textAlignment="viewEnd"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/txtViewOption1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            android:background="@drawable/option_text_back"
+            android:padding="@dimen/option_text_padding"
+            android:textAlignment="center"
+            android:textSize="@dimen/option_text_size"
+            tools:text="Japan" />
+
+        <TextView
+            android:id="@+id/txtViewOption2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            android:background="@drawable/option_text_back"
+            android:padding="@dimen/option_text_padding"
+            android:textAlignment="center"
+            android:textSize="@dimen/option_text_size"
+            tools:text="Japan" />
+
+        <TextView
+            android:id="@+id/txtViewOption3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            android:background="@drawable/option_text_back"
+            android:padding="@dimen/option_text_padding"
+            android:textAlignment="center"
+            android:textSize="@dimen/option_text_size"
+            tools:text="Japan" />
+
+        <TextView
+            android:id="@+id/txtViewOption4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            android:background="@drawable/option_text_back"
+            android:padding="@dimen/option_text_padding"
+            android:textAlignment="center"
+            android:textSize="@dimen/option_text_size"
+            tools:text="Japan" />
+
+        <Button
+            android:id="@+id/bottomBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>
