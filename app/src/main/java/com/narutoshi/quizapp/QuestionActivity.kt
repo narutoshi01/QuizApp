@@ -1,5 +1,6 @@
 package com.narutoshi.quizapp
 
+import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,13 +13,19 @@ import kotlinx.android.synthetic.main.activity_question.*
 
 class QuestionActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var questionsList : ArrayList<Question>? = null
-    private var currentQuestionId = 1
-    private var selectedOption = 0
+    private var questionsList: ArrayList<Question>? = null
+    private var currentQuestionId: Int = 1
+    private var selectedOption: Int = 0
+    private var correctAnswersNum: Int = 0
+
+    private var userName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question)
+
+        userName = intent.getStringExtra(IntentKey.USER_NAME.name)
+
 
         questionsList = Questions.getQuestions()
 
@@ -39,7 +46,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener {
 
         setOptionsToDefault()
 
-        if(currentQuestionId == questionsList!!.size) {
+        if (currentQuestionId == questionsList!!.size) {
             bottomBtn.setText(R.string.finish)
         } else {
             bottomBtn.setText(R.string.submit)
@@ -72,31 +79,34 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when(v?.id) {
+        when (v?.id) {
             R.id.txtViewOption1 -> setSelectedOptionView(txtViewOption1, 1)
             R.id.txtViewOption2 -> setSelectedOptionView(txtViewOption2, 2)
             R.id.txtViewOption3 -> setSelectedOptionView(txtViewOption3, 3)
             R.id.txtViewOption4 -> setSelectedOptionView(txtViewOption4, 4)
             R.id.bottomBtn -> {
-                when(bottomBtn.text) {
+                when (bottomBtn.text) {
                     getString(R.string.submit) -> {
-                        if(selectedOption == 0) {
+                        if (selectedOption == 0) {
                             // どの選択肢も選択せずに，次の問題にいく (or フィニッシュ)
-                            if(currentQuestionId < questionsList!!.size) {
+                            if (currentQuestionId < questionsList!!.size) {
                                 currentQuestionId++
                                 setQuestion()
-                            } else {
-                                // Todo 問題終了。結果表示画面へ
                             }
+//                            else {
+//                            }
                         } else {
                             val currentQuestion = questionsList!![currentQuestionId - 1]
                             val correctAnswer = currentQuestion.correctAnswer
                             setAnswerView(correctAnswer, R.drawable.correct_option_text_back)
-                            if(correctAnswer != selectedOption) {
-                                // 間違いのとき
+                            if (correctAnswer != selectedOption) {
+                                // 間違い
                                 setAnswerView(selectedOption, R.drawable.wrong_option_text_back)
+                            } else {
+                                // 正解
+                                correctAnswersNum++
                             }
-                            if(currentQuestionId == questionsList!!.size) {
+                            if (currentQuestionId == questionsList!!.size) {
                                 bottomBtn.setText(R.string.finish)
                             } else {
                                 bottomBtn.setText(R.string.next_question)
@@ -111,8 +121,13 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                     getString(R.string.finish) -> {
-                        // Todo　結果表示がめんへ
-                        Toast.makeText(this, "Finish", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, ResultActivity::class.java).apply {
+                            putExtra(IntentKey.USER_NAME.name, userName)
+                            putExtra(IntentKey.TOTAL_QUESTIONS.name, questionsList!!.size)
+                            putExtra(IntentKey.CORRECT_ANSWERS.name, correctAnswersNum)
+                        }
+                        startActivity(intent)
+                        finish()
                     }
                 }
 
@@ -121,7 +136,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setAnswerView(answer: Int, drawableResId: Int) {
-        when(answer) {
+        when (answer) {
             1 -> txtViewOption1.background = ContextCompat.getDrawable(this, drawableResId)
             2 -> txtViewOption2.background = ContextCompat.getDrawable(this, drawableResId)
             3 -> txtViewOption3.background = ContextCompat.getDrawable(this, drawableResId)
@@ -136,7 +151,8 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener {
         Log.d("selectedOptionNum", "$selectedOptionNum")
 
 
-        selectedOption.background = ContextCompat.getDrawable(this, R.drawable.selected_option_text_back)
+        selectedOption.background =
+            ContextCompat.getDrawable(this, R.drawable.selected_option_text_back)
         selectedOption.typeface = Typeface.DEFAULT_BOLD
     }
 }

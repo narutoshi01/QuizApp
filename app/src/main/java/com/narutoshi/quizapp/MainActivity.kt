@@ -16,7 +16,9 @@ class MainActivity : AppCompatActivity() {
             if (editTextName.text.toString().isEmpty()) {
                 txtInputLayoutName.error = "Please enter your name"
             } else {
-                val intent = Intent(this, QuestionActivity::class.java)
+                val intent = Intent(this, QuestionActivity::class.java).apply {
+                    putExtra(IntentKey.USER_NAME.name, editTextName.text.toString())
+                }
                 startActivity(intent)
                 finish()
             }

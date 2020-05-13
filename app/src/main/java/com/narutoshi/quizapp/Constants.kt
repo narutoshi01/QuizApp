@@ -1,5 +1,11 @@
 package com.narutoshi.quizapp
 
+enum class IntentKey {
+    USER_NAME,
+    TOTAL_QUESTIONS,
+    CORRECT_ANSWERS
+}
+
 object Questions {
     fun getQuestions(): ArrayList<Question> {
         val questionList = ArrayList<Question>()
